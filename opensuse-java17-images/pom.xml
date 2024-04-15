@@ -59,7 +59,6 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <autoPull>always</autoPull>
                     <images>
                         <image>
                             <name>${dockerCafImagePrefix}opensuse-jre17${dockerProjectVersion}</name>
