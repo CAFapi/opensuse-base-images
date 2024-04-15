@@ -24,9 +24,7 @@ ARG BASE_IMAGE
 FROM $BASE_IMAGE AS stage1
 
 # Refresh the OS repositories and install OpenJDK 17 Runtime Environment
-RUN zypper -n refresh && \
-    zypper -n update && \
-    zypper -n install java-17-openjdk && \
+RUN zypper -n install java-17-openjdk && \
     zypper -n clean --all
 
 # Install Java certificate installation script

@@ -126,8 +126,9 @@
                                     <https_proxy>${env.HTTPS_PROXY}</https_proxy>
                                     <no_proxy>${env.NO_PROXY}</no_proxy>
                                     
-                                    <!-- Pass in opensuse-tomcat-jre17-juli image as param -->
+                                    <!-- Pass in base images as param -->
                                     <JULI_IMAGE>${dockerCafImagePrefix}opensuse-tomcat-jre17-juli${dockerProjectVersion}</JULI_IMAGE>
+                                    <JRE_IMAGE>${dockerCafImagePrefix}opensuse-jre17${dockerProjectVersion}</JRE_IMAGE>
                                 </args>
                             </build>
                         </image>

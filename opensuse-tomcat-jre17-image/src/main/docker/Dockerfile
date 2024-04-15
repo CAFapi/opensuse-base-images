@@ -16,6 +16,7 @@
 
 # Docker registry
 ARG DOCKER_HUB_PUBLIC=docker.io
+ARG JRE_IMAGE
 
 #
 # Preliminary image, makes some modifications to the JULI image
@@ -62,11 +63,9 @@ RUN mkdir -p $WDBUILDER/usr/share && \
 #
 # The actual image definition
 #
-FROM ${DOCKER_HUB_PUBLIC}/cafapi/opensuse-jre17:1
+FROM $JRE_IMAGE
 
-RUN zypper -n refresh && \
-    zypper -n update && \
-    zypper -n clean --all
+RUN zypper -n clean --all
 
 ENV CATALINA_HOME /usr/share/tomcat
 ENV PATH $CATALINA_HOME/bin:$PATH
