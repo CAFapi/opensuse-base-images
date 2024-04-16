@@ -31,13 +31,13 @@ ENV TOMCAT_ROOT_DIR $TOMCAT_PARENT_DIR/$TOMCAT_DIR_NAME
 ENV TOMCAT_CONF_DIR $TOMCAT_ROOT_DIR/conf
 
 # Download, extract Tomcat and remove unwanted web applications
-RUN curl -fsSL -o /wd/apache-tomcat-10.1.16.tar.gz https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.16/bin/apache-tomcat-10.1.16.tar.gz && \
-    echo d469d0c68cf5e321bbc264c3148d28899e320942f34636e0aff3d79fc43e8472cd0420d0d3df5ef6ece4be4810a3f8fd518f605c5a9c13cac4e8f96f5f138e92 \
-        /wd/apache-tomcat-10.1.16.tar.gz | sha512sum -c - && \
+RUN curl -fsSL -o /wd/apache-tomcat-10.1.20.tar.gz https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.20/bin/apache-tomcat-10.1.20.tar.gz && \
+    echo 6728a28b93c4ef457ed90b8fcaa71a60f9739c4531c59a245879d2075db94c6bac336ea5a28748364df0f81a155d52b0839ecdd0c09adafdea29942a85b265b4 \
+        /wd/apache-tomcat-10.1.20.tar.gz | sha512sum -c - && \
     mkdir -p $TOMCAT_PARENT_DIR && \
     cd $TOMCAT_PARENT_DIR && \
-    tar xzf /wd/apache-tomcat-10.1.16.tar.gz && \
-    mv apache-tomcat-10.1.16 $TOMCAT_DIR_NAME && \
+    tar xzf /wd/apache-tomcat-10.1.20.tar.gz && \
+    mv apache-tomcat-10.1.20 $TOMCAT_DIR_NAME && \
     cd $TOMCAT_ROOT_DIR/webapps && \
     rm -rf docs/ examples/ host-manager/ manager/
 
