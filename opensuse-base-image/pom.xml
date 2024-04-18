@@ -32,11 +32,6 @@
 
     <name>openSUSE Base image</name>
 
-    <properties>
-        <maven.install.skip>true</maven.install.skip>
-        <DOCKER_HUB_PUBLIC>${dockerHubPublic}</DOCKER_HUB_PUBLIC>
-    </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -75,15 +70,6 @@
                         </image>
                     </images>
                     <verbose>true</verbose>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.mycila</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <configuration>
-                    <mapping>
-                        <pmod>SCRIPT_STYLE</pmod>
-                    </mapping>
                 </configuration>
             </plugin>
         </plugins>

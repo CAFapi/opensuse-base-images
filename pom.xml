@@ -60,11 +60,12 @@
 
     <modules>
         <module>opensuse-base-image</module>
+        <module>opensuse-java8-images</module>
+        <module>opensuse-java11-images</module>
         <module>opensuse-java17-images</module>
-        <module>caf-logging-tomcat-juli</module>
-        <module>opensuse-tomcat-jre17-juli-image</module>
-        <module>opensuse-tomcat-jre17-image</module>
-        <module>opensuse-opensearch1-image</module>
+        <module>opensuse-nodejs18-image</module>
+        <module>opensuse-dotnet6-images</module>
+        <module>opensuse-python3-image</module>
     </modules>
 
     <properties>
@@ -76,191 +77,6 @@
         <dockerCafImagePrefix>${dockerImagePrefix}${dockerHubOrganization}${dockerOrgSeperator}</dockerCafImagePrefix>
         <dockerProjectVersion>${dockerVersionSeperator}${project.version}</dockerProjectVersion>
     </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-access</artifactId>
-                <version>1.4.14</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>1.5.3</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-core</artifactId>
-                <version>1.5.3</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
-                <version>2.16.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.dataformat</groupId>
-                <artifactId>jackson-dataformat-cbor</artifactId>
-                <version>2.16.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.dataformat</groupId>
-                <artifactId>jackson-dataformat-smile</artifactId>
-                <version>2.16.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.dataformat</groupId>
-                <artifactId>jackson-dataformat-yaml</artifactId>
-                <version>2.16.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.cafapi</groupId>
-                <artifactId>caf-logging-tomcat-juli</artifactId>
-                <version>6.0.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.cafapi.logging</groupId>
-                <artifactId>caf-logging-common</artifactId>
-                <version>2.0.0-238</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.cafapi.logging</groupId>
-                <artifactId>caf-logging-log4j2</artifactId>
-                <version>2.0.0-238</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.fasterxml.jackson.core</groupId>
-                        <artifactId>jackson-core</artifactId>
-                    </exclusion>
-                    <!-- version clashes with analysis-icu plugin -->
-                    <exclusion>
-                        <groupId>org.apache.commons</groupId>
-                        <artifactId>commons-lang3</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.apache.commons</groupId>
-                        <artifactId>commons-text</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>com.github.cafapi.logging</groupId>
-                <artifactId>caf-logging-logback-access-converters</artifactId>
-                <version>2.0.0-238</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.cafapi.logging</groupId>
-                <artifactId>caf-logging-logback-converters</artifactId>
-                <version>2.0.0-238</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.cafapi.util</groupId>
-                <artifactId>util-process-identifier</artifactId>
-                <version>3.0.0-549</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.tomcat-slf4j-logback</groupId>
-                <artifactId>tomcat10-slf4j-logback</artifactId>
-                <version>10.1.20</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-buffer</artifactId>
-                <version>4.1.108.Final</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-codec</artifactId>
-                <version>4.1.108.Final</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-codec-http</artifactId>
-                <version>4.1.108.Final</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-common</artifactId>
-                <version>4.1.108.Final</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-handler</artifactId>
-                <version>4.1.108.Final</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-resolver</artifactId>
-                <version>4.1.108.Final</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-transport</artifactId>
-                <version>4.1.108.Final</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-transport-native-unix-common</artifactId>
-                <version>4.1.108.Final</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>3.14.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-text</artifactId>
-                <version>1.11.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-api</artifactId>
-                <version>2.23.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-core</artifactId>
-                <version>2.23.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.tomcat</groupId>
-                <artifactId>tomcat-juli</artifactId>
-                <version>10.1.20</version>
-            </dependency>
-            <dependency>
-                <groupId>org.opensearch.client</groupId>
-                <artifactId>opensearch-java</artifactId>
-                <version>1.0.0</version>
-            </dependency>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.13</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>jcl-over-slf4j</artifactId>
-                <version>2.0.9</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>log4j-over-slf4j</artifactId>
-                <version>2.0.9</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>2.0.9</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-simple</artifactId>
-                <version>2.0.9</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <pluginManagement>
@@ -284,6 +100,13 @@
                 <configuration>
                     <mapping>
                         <xslt>XML_STYLE</xslt>
+                        <pmod>SCRIPT_STYLE</pmod>
+                        <patch>SCRIPT_STYLE</patch>
+                        <jre>SCRIPT_STYLE</jre>
+                        <jdk>SCRIPT_STYLE</jdk>
+                        <aspnet>SCRIPT_STYLE</aspnet>
+                        <runtime>SCRIPT_STYLE</runtime>
+                        <sdk>SCRIPT_STYLE</sdk>
                     </mapping>
                 </configuration>
             </plugin>

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright 2017-2024 Open Text.
@@ -26,11 +25,11 @@
         <artifactId>opensuse-base-images-aggregator</artifactId>
         <version>6.0.0-SNAPSHOT</version>
     </parent>
-    
-    <artifactId>opensuse-java17-images</artifactId>
+
+    <artifactId>opensuse-dotnet6-images</artifactId>
     <packaging>pom</packaging>
 
-    <name>openSUSE Java17 images</name>
+    <name>openSUSE .NET 6 images</name>
 
     <build>
         <plugins>
@@ -56,10 +55,10 @@
                 <configuration>
                     <images>
                         <image>
-                            <name>${dockerCafImagePrefix}opensuse-jre17${dockerProjectVersion}</name>
+                            <name>${dockerCafImagePrefix}opensuse-dotnet6-aspnet${dockerProjectVersion}</name>
                             <build>
-                                <dockerFileDir>.</dockerFileDir>
-                                <dockerFile>Dockerfile.jre</dockerFile>
+                                <contextDir>.</contextDir>
+                                <dockerFile>Dockerfile.aspnet</dockerFile>
                                 <args>
                                     <!-- Enable internet access -->
                                     <http_proxy>${env.HTTP_PROXY}</http_proxy>
@@ -71,10 +70,25 @@
                             </build>
                         </image>
                         <image>
-                            <name>${dockerCafImagePrefix}opensuse-jdk17${dockerProjectVersion}</name>
+                            <name>${dockerCafImagePrefix}opensuse-dotnet6-runtime${dockerProjectVersion}</name>
                             <build>
-                                <dockerFileDir>.</dockerFileDir>
-                                <dockerFile>Dockerfile.jdk</dockerFile>
+                                <contextDir>.</contextDir>
+                                <dockerFile>Dockerfile.runtime</dockerFile>
+                                <args>
+                                    <!-- Enable internet access -->
+                                    <http_proxy>${env.HTTP_PROXY}</http_proxy>
+                                    <https_proxy>${env.HTTPS_PROXY}</https_proxy>
+                                    <no_proxy>${env.NO_PROXY}</no_proxy>
+                                    <!-- Pass in opensuse-base image as param -->
+                                    <BASE_IMAGE>${dockerCafImagePrefix}opensuse-base${dockerProjectVersion}</BASE_IMAGE>
+                                </args>
+                            </build>
+                        </image>
+                        <image>
+                            <name>${dockerCafImagePrefix}opensuse-dotnet6-sdk${dockerProjectVersion}</name>
+                            <build>
+                                <contextDir>.</contextDir>
+                                <dockerFile>Dockerfile.sdk</dockerFile>
                                 <args>
                                     <!-- Enable internet access -->
                                     <http_proxy>${env.HTTP_PROXY}</http_proxy>
@@ -86,7 +100,7 @@
                             </build>
                         </image>
                     </images>
-                    <verbose>true</verbose>
+                    <verbose>api,build</verbose>
                 </configuration>
             </plugin>
         </plugins>
