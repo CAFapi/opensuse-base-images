@@ -58,7 +58,7 @@
                         <image>
                             <name>${dockerCafImagePrefix}opensuse-jre8${dockerProjectVersion}</name>
                             <build>
-                                <dockerFileDir>.</dockerFileDir>
+                                <contextDir>.</contextDir>
                                 <dockerFile>Dockerfile.jre</dockerFile>
                                 <args>
                                     <!-- Enable internet access -->
@@ -73,7 +73,7 @@
                         <image>
                             <name>${dockerCafImagePrefix}opensuse-jdk8${dockerProjectVersion}</name>
                             <build>
-                                <dockerFileDir>.</dockerFileDir>
+                                <contextDir>.</contextDir>
                                 <dockerFile>Dockerfile.jdk</dockerFile>
                                 <args>
                                     <!-- Enable internet access -->

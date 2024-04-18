@@ -58,7 +58,7 @@
                         <image>
                             <name>${dockerCafImagePrefix}opensuse-nodejs18${dockerProjectVersion}</name>
                             <build>
-                                <dockerFileDir>.</dockerFileDir>
+                                <contextDir>.</contextDir>
                                 <args>
                                     <!-- Enable internet access -->
                                     <http_proxy>${env.HTTP_PROXY}</http_proxy>
