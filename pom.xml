@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2017-2024 Open Text.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.github.cafapi</groupId>
+    <artifactId>opensuse-base-images-aggregator</artifactId>
+    <version>4.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>openSUSE Base Images Aggregator</name>
+    <description>Collection of openSUSE based images.</description>
+    <url>https://github.com/CAFapi/opensuse-base-images</url>
+
+    <inceptionYear>2017</inceptionYear>
+
+    <parent>
+        <groupId>com.github.cafapi</groupId>
+        <artifactId>caf-common-parent</artifactId>
+        <version>5.0.0-431</version>
+    </parent>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>dermot-hardy</id>
+            <name>Dermot Hardy</name>
+            <email>dermot.hardy@microfocus.com</email>
+        </developer>
+        <developer>
+            <id>michael-bryson</id>
+            <name>Michael Bryson</name>
+            <email>michael.bryson@microfocus.com</email>
+        </developer>
+    </developers>
+
+    <modules>
+        <module>opensuse-base-image</module>
+        <module>opensuse-java8-images</module>
+        <module>opensuse-java11-images</module>
+        <module>opensuse-java17-images</module>
+        <module>opensuse-nodejs18-image</module>
+        <module>opensuse-dotnet6-images</module>
+        <module>opensuse-python3-image</module>
+    </modules>
+
+    <properties>
+        <copyrightYear>2024</copyrightYear>
+        <maven.install.skip>true</maven.install.skip>
+        <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+        <dockerHubOrganization>cafapi</dockerHubOrganization>
+        <dockerCafImagePrefix>${dockerImagePrefix}${dockerHubOrganization}${dockerOrgSeperator}</dockerCafImagePrefix>
+        <dockerProjectVersion>${dockerVersionSeperator}${project.version}</dockerProjectVersion>
+    </properties>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>io.fabric8</groupId>
+                    <artifactId>docker-maven-plugin</artifactId>
+                    <version>0.43.4</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <configuration>
+                    <mapping>
+                        <xslt>XML_STYLE</xslt>
+                        <pmod>SCRIPT_STYLE</pmod>
+                        <patch>SCRIPT_STYLE</patch>
+                        <jre>SCRIPT_STYLE</jre>
+                        <jdk>SCRIPT_STYLE</jdk>
+                        <aspnet>SCRIPT_STYLE</aspnet>
+                        <runtime>SCRIPT_STYLE</runtime>
+                        <sdk>SCRIPT_STYLE</sdk>
+                    </mapping>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <scm>
+        <connection>scm:git:https://github.com/CAFapi/opensuse-base-images.git</connection>
+        <developerConnection>scm:git:https://github.com/CAFapi/opensuse-base-images.git</developerConnection>
+        <url>https://github.com/CAFapi/opensuse-base-images</url>
+    </scm>
+
+</project>
