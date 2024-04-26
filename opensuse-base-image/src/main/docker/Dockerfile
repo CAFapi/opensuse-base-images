@@ -30,11 +30,11 @@ ENV LANG=en_US.utf8
 # Copy custom crypto-policy file
 COPY DISABLE-CBC.pmod /etc/crypto-policies/policies/modules
 
-# Update the OS packages, install cURL, postgreSQL client and dejavu-fonts
+# Update the OS packages, install postgreSQL client and dejavu-fonts
 # Install crypto-policies-scripts and disable weaker security algorithms
 RUN zypper -n refresh && \
     zypper -n update && \
-    zypper -n install curl postgresql dejavu-fonts crypto-policies-scripts && \
+    zypper -n install postgresql dejavu-fonts crypto-policies-scripts && \
     update-crypto-policies --set DEFAULT:DISABLE-CBC && \
     sed -rie '/^jdk.tls.disabledAlgorithms=/s/$/, TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256/' \
         /etc/crypto-policies/back-ends/java.config && \
