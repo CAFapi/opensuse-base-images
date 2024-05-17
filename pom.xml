@@ -95,6 +95,19 @@
         </pluginManagement>
         <plugins>
             <plugin>
+                <groupId>com.github.cafapi.plugins.docker.versions</groupId>
+                <artifactId>docker-versions-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <imageManagement>
+                        <image>
+                            <repository>${dockerHubPublic}/opensuse/leap</repository>
+                            <tag>15.6</tag>
+                        </image>
+                    </imageManagement>
+                    </configuration>
+            </plugin>
+            <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
