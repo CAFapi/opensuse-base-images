@@ -14,9 +14,6 @@
 # limitations under the License.
 #
 
-# Docker registry
-ARG DOCKER_HUB_PUBLIC=docker.io
-
 ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
