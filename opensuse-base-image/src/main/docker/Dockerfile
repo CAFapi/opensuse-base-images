@@ -14,15 +14,12 @@
 # limitations under the License.
 #
 
-# Docker registry
-ARG DOCKER_HUB_PUBLIC=docker.io
-
 #
 # Stage 1: The start of the actual image definition
 # - Install desired packages
 # - Specify policy for cryptographic back-ends
 #
-FROM ${DOCKER_HUB_PUBLIC}/opensuse/leap:latest AS stage1
+FROM ${projectDockerRegistry}/opensuse/leap AS stage1
 
 # Set the locale manually to a set inherited from the base image (defaults to POSIX)
 ENV LANG=en_US.utf8
