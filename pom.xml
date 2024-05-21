@@ -102,7 +102,7 @@
                     <imageManagement>
                         <image>
                             <repository>${dockerHubPublic}/opensuse/leap</repository>
-                            <tag>15.6</tag>
+                            <tag>latest</tag>
                         </image>
                     </imageManagement>
                     </configuration>
