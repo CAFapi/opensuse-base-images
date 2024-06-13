@@ -18,5 +18,5 @@ ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
 # Update the OS packages and install NodeJS
-RUN zypper -n install nodejs18 npm && \
+RUN zypper -n install nodejs20 npm && \
     zypper -n clean --all

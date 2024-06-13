@@ -26,11 +26,11 @@
         <artifactId>opensuse-base-images-aggregator</artifactId>
         <version>4.1.0-SNAPSHOT</version>
     </parent>
-    
-    <artifactId>opensuse-nodejs18-image</artifactId>
+
+    <artifactId>opensuse-java21-images</artifactId>
     <packaging>pom</packaging>
 
-    <name>openSUSE NodeJS18 image</name>
+    <name>openSUSE Java21 images</name>
 
     <build>
         <plugins>
@@ -56,9 +56,25 @@
                 <configuration>
                     <images>
                         <image>
-                            <name>${dockerCafImagePrefix}opensuse-nodejs18${dockerProjectVersion}</name>
+                            <name>${dockerCafImagePrefix}opensuse-jre21${dockerProjectVersion}</name>
                             <build>
                                 <contextDir>.</contextDir>
+                                <dockerFile>Dockerfile.jre</dockerFile>
+                                <args>
+                                    <!-- Enable internet access -->
+                                    <http_proxy>${env.HTTP_PROXY}</http_proxy>
+                                    <https_proxy>${env.HTTPS_PROXY}</https_proxy>
+                                    <no_proxy>${env.NO_PROXY}</no_proxy>
+                                    <!-- Pass in opensuse-base image as param -->
+                                    <BASE_IMAGE>${dockerCafImagePrefix}opensuse-base${dockerProjectVersion}</BASE_IMAGE>
+                                </args>
+                            </build>
+                        </image>
+                        <image>
+                            <name>${dockerCafImagePrefix}opensuse-jdk21${dockerProjectVersion}</name>
+                            <build>
+                                <contextDir>.</contextDir>
+                                <dockerFile>Dockerfile.jdk</dockerFile>
                                 <args>
                                     <!-- Enable internet access -->
                                     <http_proxy>${env.HTTP_PROXY}</http_proxy>
