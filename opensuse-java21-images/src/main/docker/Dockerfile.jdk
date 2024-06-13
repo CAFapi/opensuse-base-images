@@ -20,7 +20,7 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE AS stage1
 
-# Refresh the OS repositories and install OpenJDK 17 Development Kit
+# Refresh the OS repositories and install OpenJDK 21 Development Kit
 RUN zypper -n install java-21-openjdk-devel && \
     zypper -n clean --all
 
