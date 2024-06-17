@@ -1,0 +1,54 @@
+#
+# Copyright 2017-2024 Open Text.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+#
+# Stage 1
+#
+ARG BASE_IMAGE
+FROM $BASE_IMAGE AS stage1
+
+# Refresh the OS repositories and install OpenJDK 21 Runtime Environment
+RUN zypper -n install java-21-openjdk && \
+    zypper -n clean --all
+
+# Install Java certificate installation script
+ADD https://raw.githubusercontent.com/CAFapi/caf-common/v1.19.0/container-cert-script/install-ca-cert-java.sh \
+    /startup/startup.d/
+RUN chmod +x /startup/startup.d/install-ca-cert-java.sh
+
+# Set JRE Home
+ENV JRE_HOME=/usr/lib64/jvm/java-21-openjdk-21
+
+#
+# Stage 2: Create the NSS database
+#
+FROM stage1 AS stage2
+
+RUN zypper -n install mozilla-nss-tools
+
+RUN mkdir /etc/pki/nssdb
+RUN certutil -N --empty-password -d /etc/pki/nssdb/
+# The '/usr/lib64/jvm/java-21-openjdk-21/conf/security/nss.fips.cfg' file contains'nssDbMode=readWrite', so adjust permissions accordingly to allow services running as a non-root user to access the NSS directory.
+# See: https://docs.oracle.com/en/java/javase/21/security/pkcs11-reference-guide1.html#GUID-85EA1017-E59C-49B9-9207-65B7B2BF171E__GUID-D7866EA0-8645-4F13-A702-7502BCDFC51F
+RUN chmod a+rw /etc/pki/nssdb/*
+
+#
+# Stage 3: The remainder of the actual image definition
+#
+FROM stage1
+
+# Copy nssdb
+COPY --from=stage2 /etc/pki/nssdb /etc/pki/nssdb
