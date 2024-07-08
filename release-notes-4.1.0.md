@@ -1,5 +1,3 @@
-!not-ready-for-release!
-
 #### Version Number
 ${version-number}
 
@@ -9,3 +7,4 @@ ${version-number}
   - NodeJS18 is no longer available on Leap 15.6 so it has been replaced with a NodeJS20 image.
 
 #### Known Issues
+- None
