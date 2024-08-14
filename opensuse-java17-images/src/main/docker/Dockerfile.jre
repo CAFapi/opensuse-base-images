@@ -32,6 +32,9 @@ RUN chmod +x /startup/startup.d/install-ca-cert-java.sh
 # Set JRE Home
 ENV JRE_HOME=/usr/lib64/jvm/java-17-openjdk-17
 
+# Append securerandom.strongAlgorithms list with SunPKCS11 provider
+RUN sed -i 's/\bsecurerandom.strongAlgorithms=\b/&PKCS11:SunPKCS11-NSS-FIPS,/' /usr/lib64/jvm/java-17-openjdk-17/conf/security/java.security
+
 #
 # Stage 2: Create the NSS database
 #
