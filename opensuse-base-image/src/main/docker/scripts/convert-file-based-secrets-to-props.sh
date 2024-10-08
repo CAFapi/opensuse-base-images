@@ -40,7 +40,7 @@ convert_file_based_secrets_to_props() {
         if [[ ${env_var_name} == *_FILE ]] ; then
             local prop_name=${env_var_name%_FILE}
             caf_log "INFO: Reading ${env_var_name} (${env_var_value})..."
-            # TODO dont log env_var_value
+            # TODO dont log file_contents
             if [ -e "$env_var_value" ]; then
                 local file_contents=$(<${env_var_value})
                 if echo "-D${prop_name}=${file_contents}" >> "$java_props_file" ; then
