@@ -17,20 +17,20 @@
 
 # A function for logging in the caf logging format.
 caf_log() {
-    echo "$@" |& $(dirname "$0")/../scripts/caf-log-format.sh "export-file-based-secrets.sh" 1>&2
+    echo "$@" |& $(dirname "$0")/../scripts/caf-log-format.sh "convert_file_based_secrets_to_props.sh" 1>&2
 }
 
-# A function for writing file-based secrets to a Java arguments file as properties.
+# A function for converting file-based secrets to properties.
 #
 # For example, for each environment variable ending in the _FILE suffix:
 #
 #     ABC_PASSWORD_FILE=/var/somefile.txt
 #
-# read the contents of /var/somefile.txt (for example 'mypassword'), and write the following line to /maven/java-args.txt:
+# read the contents of /var/somefile.txt (for example 'mypassword'), and write the following line to /maven/secret-props.txt:
 #
 #     -DABC_PASSWORD=mypassword
-write_file_based_secrets_as_properties() {
-    local java_args_file="/maven/java-args.txt"
+convert_file_based_secrets_to_props() {
+    local java_args_file="/maven/secret-props.txt"
 
     # Remove the existing java-args.txt file if it exists
     if [ -f "$java_args_file" ]; then
@@ -49,10 +49,10 @@ write_file_based_secrets_as_properties() {
             if [ -e "$env_var_value" ]; then
                 local file_contents=$(<${env_var_value})
                 if echo "-D${env_var_name_without_file_suffix}=${file_contents}" >> "$java_args_file" ; then
-                    caf_log "INFO: Successfully added to java-args.txt: -D${env_var_name_without_file_suffix}=${file_contents}"
+                    caf_log "INFO: Successfully added to secret-props.txt: -D${env_var_name_without_file_suffix}=${file_contents}"
                     unset "$env_var_name"
                 else
-                    caf_log "ERROR: Failed to write to java-args.txt: -D${env_var_name_without_file_suffix}=${file_contents}"
+                    caf_log "ERROR: Failed to write to secret-props.txt: -D${env_var_name_without_file_suffix}=${file_contents}"
                     exit 1
                 fi
             else
@@ -63,7 +63,7 @@ write_file_based_secrets_as_properties() {
     done < <(env -0)
 }
 
-# Call the function to write secrets to java-args.txt
-write_file_based_secrets_as_properties
+# Call the function to write secrets to secret-props.txt
+convert_file_based_secrets_to_props
 
 unset -f caf_log # Don't export the caf_log function when this script is sourced

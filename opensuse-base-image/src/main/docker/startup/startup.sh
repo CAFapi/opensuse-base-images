@@ -32,13 +32,13 @@ if [ "$USE_FILE_BASED_SECRETS" = true ]; then
 fi
 
 # Write file-based secrets as properties
-if [ "$WRITE_FILE_BASED_SECRETS_AS_PROPERTIES" = true ]; then
-    log "Running write-file-based-secrets-as-properties.sh..."
-    source $(dirname "$0")/../scripts/export-file-based-secrets-as-properties.sh
-    write_file_based_secrets_as_properties_status=${PIPESTATUS[0]}
-    if [ $write_file_based_secrets_as_properties_status -ne 0 ]; then
-        echo "ERROR: Error running write-file-based-secrets-as-properties.sh" |& $(dirname "$0")/../scripts/caf-log-format.sh "startup.sh"
-        exit $write_file_based_secrets_as_properties_status
+if [ "$CONVERT_FILE_BASED_SECRETS_TO_PROPS" = true ]; then
+    log "Running convert-file-based-secrets-to-props.sh..."
+    source $(dirname "$0")/../scripts/convert-file-based-secrets-to-props.sh
+    convert_file_based_secrets_to_props_status=${PIPESTATUS[0]}
+    if [ $convert_file_based_secrets_to_props_status -ne 0 ]; then
+        echo "ERROR: Error running convert-file-based-secrets-to-props.sh" |& $(dirname "$0")/../scripts/caf-log-format.sh "startup.sh"
+        exit $convert_file_based_secrets_to_props_status
     fi
 fi
 
