@@ -30,24 +30,23 @@ caf_log() {
 #
 #     -DABC_PASSWORD=mypassword
 convert_file_based_secrets_to_props() {
-    local java_props_file="/maven/secret-props.txt"
+    local props_file="/maven/secret-props.txt"
 
-    if [ -f "$java_props_file" ]; then
-        rm "$java_props_file"
+    if [ -f "$props_file" ]; then
+        rm "$props_file"
     fi
 
     while IFS='=' read -r -d '' env_var_name env_var_value; do
         if [[ ${env_var_name} == *_FILE ]] ; then
             local prop_name=${env_var_name%_FILE}
             caf_log "INFO: Reading ${env_var_name} (${env_var_value})..."
-            # TODO dont log file_contents
             if [ -e "$env_var_value" ]; then
                 local file_contents=$(<${env_var_value})
-                if echo "-D${prop_name}=${file_contents}" >> "$java_props_file" ; then
-                    caf_log "INFO: Successfully added to ${java_props_file}: -D${prop_name}=${file_contents}"
+                if echo "-D${prop_name}=${file_contents}" >> "$props_file" ; then
+                    caf_log "INFO: Successfully added to ${props_file}: -D${prop_name}=<CONTENT HIDDEN>"
                     unset "$env_var_name"
                 else
-                    caf_log "ERROR: Failed to write to ${java_props_file}: -D${prop_name}=${file_contents}"
+                    caf_log "ERROR: Failed to write to ${props_file}: -D${prop_name}=<CONTENT HIDDEN>"
                     exit 1
                 fi
             else
