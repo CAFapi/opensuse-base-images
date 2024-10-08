@@ -17,7 +17,7 @@
 
 # A function for logging in the caf logging format.
 caf_log() {
-    echo "$@" |& $(dirname "$0")/../scripts/caf-log-format.sh "export-file-based-secrets.sh" 1>&2
+    echo "$@" |& $(dirname "$0")/../scripts/caf-log-format.sh "write_file_based_secrets_as_properties.sh" 1>&2
 }
 
 # A function for writing file-based secrets to a Java arguments file as properties.
