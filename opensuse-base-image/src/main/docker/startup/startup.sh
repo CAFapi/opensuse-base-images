@@ -34,7 +34,7 @@ fi
 # Write file-based secrets as properties
 if [ "$WRITE_FILE_BASED_SECRETS_AS_PROPERTIES" = true ]; then
     log "Running write-file-based-secrets-as-properties.sh..."
-    source $(dirname "$0")/../scripts/export-file-based-secrets-as-properties.sh
+    source $(dirname "$0")/../scripts/write-file-based-secrets-as-properties.sh
     write_file_based_secrets_as_properties_status=${PIPESTATUS[0]}
     if [ $write_file_based_secrets_as_properties_status -ne 0 ]; then
         echo "ERROR: Error running write-file-based-secrets-as-properties.sh" |& $(dirname "$0")/../scripts/caf-log-format.sh "startup.sh"
