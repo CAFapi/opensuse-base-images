@@ -31,7 +31,7 @@ if [ "$USE_FILE_BASED_SECRETS" = true ]; then
     fi
 fi
 
-# Write file-based secrets as properties
+# Convert file-based secrets to properties
 if [ "$CONVERT_FILE_BASED_SECRETS_TO_PROPS" = true ]; then
     log "Running convert-file-based-secrets-to-props.sh..."
     source $(dirname "$0")/../scripts/convert-file-based-secrets-to-props.sh

@@ -30,29 +30,24 @@ caf_log() {
 #
 #     -DABC_PASSWORD=mypassword
 convert_file_based_secrets_to_props() {
-    local java_args_file="/maven/secret-props.txt"
+    local java_props_file="/maven/secret-props.txt"
 
-    # Remove the existing java-args.txt file if it exists
-    if [ -f "$java_args_file" ]; then
-        rm "$java_args_file"
+    if [ -f "$java_props_file" ]; then
+        rm "$java_props_file"
     fi
 
     while IFS='=' read -r -d '' env_var_name env_var_value; do
         if [[ ${env_var_name} == *_FILE ]] ; then
-            local env_var_name_without_file_suffix=${env_var_name%_FILE}
-            if [ "${!env_var_name:-}" ] && [ "${!env_var_name_without_file_suffix:-}" ]; then
-                caf_log "ERROR: Both $env_var_name and $env_var_name_without_file_suffix are set (but are exclusive)"
-                exit 1
-            fi
+            local prop_name=${env_var_name%_FILE}
             caf_log "INFO: Reading ${env_var_name} (${env_var_value})..."
             # TODO dont log env_var_value
             if [ -e "$env_var_value" ]; then
                 local file_contents=$(<${env_var_value})
-                if echo "-D${env_var_name_without_file_suffix}=${file_contents}" >> "$java_args_file" ; then
-                    caf_log "INFO: Successfully added to secret-props.txt: -D${env_var_name_without_file_suffix}=${file_contents}"
+                if echo "-D${prop_name}=${file_contents}" >> "$java_props_file" ; then
+                    caf_log "INFO: Successfully added to ${java_props_file}: -D${prop_name}=${file_contents}"
                     unset "$env_var_name"
                 else
-                    caf_log "ERROR: Failed to write to secret-props.txt: -D${env_var_name_without_file_suffix}=${file_contents}"
+                    caf_log "ERROR: Failed to write to ${java_props_file}: -D${prop_name}=${file_contents}"
                     exit 1
                 fi
             else
@@ -63,7 +58,6 @@ convert_file_based_secrets_to_props() {
     done < <(env -0)
 }
 
-# Call the function to write secrets to secret-props.txt
 convert_file_based_secrets_to_props
 
 unset -f caf_log # Don't export the caf_log function when this script is sourced
