@@ -44,7 +44,6 @@ convert_file_based_secrets_to_props() {
                 local file_contents=$(<${env_var_value})
                 if echo "-D${prop_name}=${file_contents}" >> "$props_file" ; then
                     caf_log "INFO: Successfully added to ${props_file}: -D${prop_name}=<CONTENT HIDDEN>"
-                    unset "$env_var_name"
                 else
                     caf_log "ERROR: Failed to write to ${props_file}: -D${prop_name}=<CONTENT HIDDEN>"
                     exit 1

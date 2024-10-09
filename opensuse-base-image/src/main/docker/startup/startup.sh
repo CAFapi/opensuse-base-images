@@ -20,17 +20,6 @@ log() {
     echo "[$(date +%F\ %H:%M:%S.%3NZ) #$(printf '%03X\n' $$).??? INFO  -            -   ] ${0##*/}: $@" 1>&2
 }
 
-# Export file based secrets
-if [ "$USE_FILE_BASED_SECRETS" = true ]; then
-    log "Running export-file-based-secrets.sh..."
-    source $(dirname "$0")/../scripts/export-file-based-secrets.sh
-    export_file_based_secrets_status=${PIPESTATUS[0]}
-    if [ $export_file_based_secrets_status -ne 0 ]; then
-        echo "ERROR: Error running export-file-based-secrets.sh" |& $(dirname "$0")/../scripts/caf-log-format.sh "startup.sh"
-        exit $export_file_based_secrets_status
-    fi
-fi
-
 # Convert file-based secrets to properties
 if [ "$CONVERT_FILE_BASED_SECRETS_TO_PROPS" = true ]; then
     log "Running convert-file-based-secrets-to-props.sh..."
@@ -39,6 +28,17 @@ if [ "$CONVERT_FILE_BASED_SECRETS_TO_PROPS" = true ]; then
     if [ $convert_file_based_secrets_to_props_status -ne 0 ]; then
         echo "ERROR: Error running convert-file-based-secrets-to-props.sh" |& $(dirname "$0")/../scripts/caf-log-format.sh "startup.sh"
         exit $convert_file_based_secrets_to_props_status
+    fi
+fi
+
+# Export file based secrets
+if [ "$USE_FILE_BASED_SECRETS" = true ]; then
+    log "Running export-file-based-secrets.sh..."
+    source $(dirname "$0")/../scripts/export-file-based-secrets.sh
+    export_file_based_secrets_status=${PIPESTATUS[0]}
+    if [ $export_file_based_secrets_status -ne 0 ]; then
+        echo "ERROR: Error running export-file-based-secrets.sh" |& $(dirname "$0")/../scripts/caf-log-format.sh "startup.sh"
+        exit $export_file_based_secrets_status
     fi
 fi
 
