@@ -28,7 +28,9 @@ caf_log() {
 #
 # read the contents of /var/somefile.txt (for example 'mypassword'), and write the following line to /maven/secret-props.txt:
 #
-#     -DABC_PASSWORD=mypassword
+#     -DCAF.ABC_PASSWORD=mypassword
+#
+# Note that the prefix "CAF." is added to the property name.
 convert_file_based_secrets_to_props() {
     local props_file="/maven/secret-props.txt"
 
@@ -38,7 +40,7 @@ convert_file_based_secrets_to_props() {
 
     while IFS='=' read -r -d '' env_var_name env_var_value; do
         if [[ ${env_var_name} == *_FILE ]] ; then
-            local prop_name=${env_var_name%_FILE}
+            local prop_name="CAF.${env_var_name%_FILE}"
             caf_log "INFO: Reading ${env_var_name} (${env_var_value})..."
             if [ -e "$env_var_value" ]; then
                 local file_contents=$(<${env_var_value})
