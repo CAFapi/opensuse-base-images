@@ -10,6 +10,6 @@ ${version-number}
   The contents of `/var/somefile.txt` (e.g., `mypassword`) will be read and then written to `/maven/secret-props.txt` as:  
   `-DCAF.ABC_PASSWORD=mypassword`  
   Note that the prefix `CAF.` is added to the property name.  
-  This functionality is enabled by setting the environment variable `$CONVERT_FILE_BASED_SECRETS_TO_PROPS=true`.
+  This functionality is enabled by setting the environment variable `CONVERT_FILE_BASED_SECRETS_TO_PROPS=true`.
 
 #### Known Issues
