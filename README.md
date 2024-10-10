@@ -49,6 +49,21 @@ Any executable scripts added to the `/startup/startup.d/` directory will be auto
 #### Certificate Installation
 The images come pre-installed with a startup script which provides a mechanism to extend the CA certificates which should be trusted.
 
+#### Convert File-Based Secrets To Properties Script
+The images come pre-installed with a startup script which provides support for converting file-based secrets to properties.
+
+It works by looking for environment variables ending with the _FILE prefix and writing a property containing the contents of the file. The property name will be the environment variable name without the `_FILE` prefix and with a `CAF.` prefix added.
+
+For example, given this environment variable ending in the _FILE suffix:
+```
+ABC_PASSWORD_FILE=/var/somefile.txt
+```
+the script will read the contents of /var/somefile.txt (for example 'mypassword'), aand write the following line to /maven/secret-props.txt:
+```
+-DCAF.ABC_PASSWORD=mypassword
+```
+This feature is disabled by default. To enable it, ensure a `CONVERT_FILE_BASED_SECRETS_TO_PROPS` environment variable is present, with a value of `true`, for example, `CONVERT_FILE_BASED_SECRETS_TO_PROPS=true`.
+
 #### Export File-Based Secrets Script
 The images come pre-installed with a startup script which provides support for file-based secrets.
 
