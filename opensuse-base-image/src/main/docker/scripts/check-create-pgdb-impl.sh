@@ -50,7 +50,7 @@ function get_secret {
   local varNameFile="${varName}_FILE"
   local secretValue=""
 
-  # Check if we should retrieve from the environment (default is true)
+  # If CAF_GET_SECRETS_FROM_ENV=true (default: true) then get secret from env var
   if [ "${CAF_GET_SECRETS_FROM_ENV:-true}" = "true" ]; then
     secretValue="${!varName}"
     if [ -n "$secretValue" ]; then
@@ -59,7 +59,7 @@ function get_secret {
     fi
   fi
 
-  # Check if we should retrieve from a file and the _FILE suffix is defined
+  # If CAF_GET_SECRETS_FROM_FILE=true (default: false) then get secret from file via env var
   if [ "${CAF_GET_SECRETS_FROM_FILE:-false}" = "true" ] && [ -n "${!varNameFile}" ]; then
     if [ -f "${!varNameFile}" ]; then
       secretValue=$(cat "${!varNameFile}")
