@@ -72,25 +72,25 @@ function get_secret {
       if [ -n "${!varNameFile}" ]; then
         # Check if file exists
         if [ ! -f "${!varNameFile}" ]; then
-          echo "Error: File not found at path ${!varNameFile}" >&2
+          echo "Error: File not found at path ${!varNameFile}"
           exit 1
         fi
 
         # Check if file is readable
         if [ ! -r "${!varNameFile}" ]; then
-          echo "Error: File ${!varNameFile} is not readable" >&2
+          echo "Error: File ${!varNameFile} is not readable"
           exit 1
         fi
 
         # Read file
         secretValue=$(cat "${!varNameFile}") || {
-          echo "Error: Failed to read file ${!varNameFile}" >&2
+          echo "Error: Failed to read file ${!varNameFile}"
           exit 1
         }
 
         # Check if file is empty
         if [ -z "$secretValue" ]; then
-          echo "Error: Secret file ${!varNameFile} is empty" >&2
+          echo "Error: Secret file ${!varNameFile} is empty"
           exit 1
         fi
 
