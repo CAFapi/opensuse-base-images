@@ -102,7 +102,7 @@ function get_secret {
   fi
 
   # If no secret is found, return an error
-  echo "Error: Secret for $varName not found" >&2
+  echo "Error: Secret for $varName not found"
   exit 1
 }
 
