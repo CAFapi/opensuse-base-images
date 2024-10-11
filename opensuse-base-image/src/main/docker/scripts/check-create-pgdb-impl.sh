@@ -89,7 +89,7 @@ database_port=$(echo ${!varName})
 varName="$ENV_PREFIX"DATABASE_USERNAME
 database_username=$(echo ${!varName})
 
-varName="$ENV_PREFIX"DATABASE_PASSWORD
+varName="${ENV_PREFIX}DATABASE_PASSWORD"
 database_password=$(get_secret "$varName")
 
 varName="$ENV_PREFIX"DATABASE_APPNAME
