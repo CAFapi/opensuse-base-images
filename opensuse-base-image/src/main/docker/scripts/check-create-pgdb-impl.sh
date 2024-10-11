@@ -52,10 +52,12 @@ function get_secret {
 
   # If CAF_GET_SECRETS_FROM_ENV=true (default: true) then get secret from env var
   if [ "${CAF_GET_SECRETS_FROM_ENV:-true}" = "true" ]; then
-    if [ -n "${!varName+x}" ]; then  # Check if varName exists
+    # Check if varName exists
+    if [ -n "${!varName+x}" ]; then
       secretValue="${!varName}"
-      if [ -n "$secretValue" ]; then # Check if varName is not empty
-        # Return secret value
+      # Check if the value in varName is not empty
+      if [ -n "$secretValue" ]; then
+        # Return value in varName
         printf '%s' "$secretValue"
         return 0
       fi
@@ -63,33 +65,40 @@ function get_secret {
   fi
 
   # If CAF_GET_SECRETS_FROM_FILE=true (default: false) then get secret from file via env var
-  if [ "${CAF_GET_SECRETS_FROM_FILE:-false}" = "true" ] && [ -n "${!varNameFile}" ]; then
-    if [ ! -f "${!varNameFile}" ]; then
-      echo "Error: File not found at path ${!varNameFile}" >&2
-      exit 1
+  if [ "${CAF_GET_SECRETS_FROM_FILE:-false}" = "true" ]; then
+    # Check if varNameFile exists (even if empty)
+    if [ -n "${!varNameFile+x}" ]; then
+      # Check if varNameFile is not empty
+      if [ -n "${!varNameFile}" ]; then
+        # Check if file exists
+        if [ ! -f "${!varNameFile}" ]; then
+          echo "Error: File not found at path ${!varNameFile}" >&2
+          exit 1
+        fi
+
+        # Check if file is readable
+        if [ ! -r "${!varNameFile}" ]; then
+          echo "Error: File ${!varNameFile} is not readable" >&2
+          exit 1
+        fi
+
+        # Read file
+        secretValue=$(cat "${!varNameFile}") || {
+          echo "Error: Failed to read file ${!varNameFile}" >&2
+          exit 1
+        }
+
+        # Check if file is empty
+        if [ -z "$secretValue" ]; then
+          echo "Error: Secret file ${!varNameFile} is empty" >&2
+          exit 1
+        fi
+
+        # Return file content
+        printf '%s' "$secretValue"
+        return 0
+      fi
     fi
-
-    # Check if file is readable
-    if [ ! -r "${!varNameFile}" ]; then
-      echo "Error: File ${!varNameFile} is not readable" >&2
-      exit 1
-    fi
-
-    # Read file
-    secretValue=$(cat "${!varNameFile}") || {
-      echo "Error: Failed to read file ${!varNameFile}" >&2
-      exit 1
-    }
-
-    # Check if file is empty
-    if [ -z "$secretValue" ]; then
-      echo "Error: Secret file ${!varNameFile} is empty" >&2
-      exit 1
-    fi
-
-    # Return secret value
-    printf '%s' "$secretValue"
-    return 0
   fi
 
   # If no secret is found, return an error
