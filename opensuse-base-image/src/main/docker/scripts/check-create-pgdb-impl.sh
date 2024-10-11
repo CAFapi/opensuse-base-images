@@ -66,7 +66,7 @@ function get_secret {
 
   # If CAF_GET_SECRETS_FROM_FILE=true (default: false) then get secret from file via env var
   if [ "${CAF_GET_SECRETS_FROM_FILE:-false}" = "true" ]; then
-    # Check if varNameFile exists (even if empty)
+    # Check if varNameFile exists
     if [ -n "${!varNameFile+x}" ]; then
       # Check if varNameFile is not empty
       if [ -n "${!varNameFile}" ]; then
