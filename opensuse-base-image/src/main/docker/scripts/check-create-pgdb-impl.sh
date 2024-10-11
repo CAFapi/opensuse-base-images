@@ -44,6 +44,38 @@ fi
 
 ENV_PREFIX=$1
 
+# Function to get secret
+function get_secret {
+  local varName="$1"
+  local varNameFile="${varName}_FILE"
+  local secretValue=""
+
+  # Check if we should retrieve from the environment (default is true)
+  if [ "${CAF_GET_SECRETS_FROM_ENV:-true}" = "true" ]; then
+    secretValue="${!varName}"
+    if [ -n "$secretValue" ]; then
+      echo "$secretValue"
+      return
+    fi
+  fi
+
+  # Check if we should retrieve from a file and the _FILE suffix is defined
+  if [ "${CAF_GET_SECRETS_FROM_FILE:-false}" = "true" ] && [ -n "${!varNameFile}" ]; then
+    if [ -f "${!varNameFile}" ]; then
+      secretValue=$(cat "${!varNameFile}")
+      echo "$secretValue"
+      return
+    else
+      echo "Error: File not found at path ${!varNameFile}" >&2
+      exit 1
+    fi
+  fi
+
+  # If no secret is found, return an error
+  echo "Error: Secret for $varName not found" >&2
+  exit 1
+}
+
 # Need to convert prefixed variables to known values:
 varName="$ENV_PREFIX"DATABASE_NAME
 database_name=$(echo ${!varName})
@@ -58,7 +90,7 @@ varName="$ENV_PREFIX"DATABASE_USERNAME
 database_username=$(echo ${!varName})
 
 varName="$ENV_PREFIX"DATABASE_PASSWORD
-database_password=$(echo ${!varName})
+database_password=$(get_secret "$varName")
 
 varName="$ENV_PREFIX"DATABASE_APPNAME
 database_appname=$(echo ${!varName})
@@ -102,7 +134,7 @@ function check_variables {
   fi
 
   if [ -z "$database_password" ] ; then
-    echo "ERROR: Mandatory variable "$(echo $ENV_PREFIX"DATABASE_PASSWORD")" not defined"
+    echo "ERROR: One of "$(echo $ENV_PREFIX"DATABASE_PASSWORD")" or "$(echo $ENV_PREFIX"DATABASE_PASSWORD_FILE")" must be defined"
     missingVar+=1
   fi
 
