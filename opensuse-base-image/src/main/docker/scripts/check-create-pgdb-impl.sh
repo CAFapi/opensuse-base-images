@@ -52,27 +52,48 @@ function get_secret {
 
   # If CAF_GET_SECRETS_FROM_ENV=true (default: true) then get secret from env var
   if [ "${CAF_GET_SECRETS_FROM_ENV:-true}" = "true" ]; then
-    secretValue="${!varName}"
-    if [ -n "$secretValue" ]; then
-      echo "$secretValue"
-      return
+    if [ -n "${!varName+x}" ]; then  # Check if varName exists
+      secretValue="${!varName}"
+      if [ -n "$secretValue" ]; then # Check if varName is not empty
+        # Return secret value
+        printf '%s' "$secretValue"
+        return 0
+      fi
     fi
   fi
 
   # If CAF_GET_SECRETS_FROM_FILE=true (default: false) then get secret from file via env var
   if [ "${CAF_GET_SECRETS_FROM_FILE:-false}" = "true" ] && [ -n "${!varNameFile}" ]; then
-    if [ -f "${!varNameFile}" ]; then
-      secretValue=$(cat "${!varNameFile}")
-      echo "$secretValue"
-      return
-    else
-      echo "Error: File not found at path ${!varNameFile}"
+    if [ ! -f "${!varNameFile}" ]; then
+      echo "Error: File not found at path ${!varNameFile}" >&2
       exit 1
     fi
+
+    # Check if file is readable
+    if [ ! -r "${!varNameFile}" ]; then
+      echo "Error: File ${!varNameFile} is not readable" >&2
+      exit 1
+    fi
+
+    # Read file
+    secretValue=$(cat "${!varNameFile}") || {
+      echo "Error: Failed to read file ${!varNameFile}" >&2
+      exit 1
+    }
+
+    # Check if file is empty
+    if [ -z "$secretValue" ]; then
+      echo "Error: Secret file ${!varNameFile} is empty" >&2
+      exit 1
+    fi
+
+    # Return secret value
+    printf '%s' "$secretValue"
+    return 0
   fi
 
   # If no secret is found, return an error
-  echo "Error: Secret for $varName not found"
+  echo "Error: Secret for $varName not found" >&2
   exit 1
 }
 
