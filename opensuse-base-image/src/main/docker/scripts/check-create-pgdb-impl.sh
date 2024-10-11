@@ -66,13 +66,13 @@ function get_secret {
       echo "$secretValue"
       return
     else
-      echo "Error: File not found at path ${!varNameFile}" >&2
+      echo "Error: File not found at path ${!varNameFile}"
       exit 1
     fi
   fi
 
   # If no secret is found, return an error
-  echo "Error: Secret for $varName not found" >&2
+  echo "Error: Secret for $varName not found"
   exit 1
 }
 
