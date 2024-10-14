@@ -108,7 +108,6 @@ database_username=$(echo ${!varName})
 
 varName="${ENV_PREFIX}DATABASE_PASSWORD"
 if ! database_password="$(get_secret "$varName")"; then
-  echo "Failed to retrieve database password" >&2
   exit 1
 fi
 
@@ -153,10 +152,7 @@ function check_variables {
     missingVar+=1
   fi
 
-  if [ -z "$database_password" ] ; then
-    echo "ERROR: One of "$(echo $ENV_PREFIX"DATABASE_PASSWORD")" or "$(echo $ENV_PREFIX"DATABASE_PASSWORD_FILE")" must be defined"
-    missingVar+=1
-  fi
+  # database_password is checked in get_secret function
 
   if [ -z "$database_appname" ] ; then
     echo "ERROR: Mandatory variable "$(echo $ENV_PREFIX"DATABASE_APPNAME")" not defined"
