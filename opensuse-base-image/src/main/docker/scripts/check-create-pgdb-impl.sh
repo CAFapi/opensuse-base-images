@@ -72,25 +72,25 @@ function get_secret {
       if [ -n "${!varNameFile}" ]; then
         # Check if file exists
         if [ ! -f "${!varNameFile}" ]; then
-          echo "Error: File not found at path ${!varNameFile}" >&2
+          echo "ERROR: File not found at path ${!varNameFile}" >&2
           return 1
         fi
 
         # Check if file is readable
         if [ ! -r "${!varNameFile}" ]; then
-          echo "Error: File ${!varNameFile} is not readable" >&2
+          echo "ERROR: File ${!varNameFile} is not readable" >&2
           return 1
         fi
 
         # Read file
         secretValue=$(cat "${!varNameFile}") || {
-          echo "Error: Failed to read file ${!varNameFile}" >&2
+          echo "ERROR: Failed to read file ${!varNameFile}" >&2
           return 1
         }
 
         # Check if file is empty
         if [ -z "$secretValue" ]; then
-          echo "Error: Secret file ${!varNameFile} is empty" >&2
+          echo "ERROR: Secret file ${!varNameFile} is empty" >&2
           return 1
         fi
 
@@ -102,7 +102,7 @@ function get_secret {
   fi
 
   # If no secret is found, return an error
-  echo "Error: Secret for $varName not found" >&2
+  echo "ERROR: Secret for $varName not found" >&2
   return 1
 }
 
@@ -121,7 +121,6 @@ database_username=$(echo ${!varName})
 
 varName="${ENV_PREFIX}DATABASE_PASSWORD"
 if ! database_password=$(get_secret "$varName"); then
-  echo "Failed to get database password. Exiting." >&2
   exit 1
 fi
 
