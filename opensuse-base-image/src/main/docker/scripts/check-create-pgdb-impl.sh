@@ -72,26 +72,26 @@ function get_secret {
       if [ -n "${!varNameFile}" ]; then
         # Check if file exists
         if [ ! -f "${!varNameFile}" ]; then
-          echo "Error: File not found at path ${!varNameFile}"
-          exit 1
+          echo "Error: File not found at path ${!varNameFile}" >&2
+          return 1
         fi
 
         # Check if file is readable
         if [ ! -r "${!varNameFile}" ]; then
-          echo "Error: File ${!varNameFile} is not readable"
-          exit 1
+          echo "Error: File ${!varNameFile} is not readable" >&2
+          return 1
         fi
 
         # Read file
         secretValue=$(cat "${!varNameFile}") || {
-          echo "Error: Failed to read file ${!varNameFile}"
-          exit 1
+          echo "Error: Failed to read file ${!varNameFile}" >&2
+          return 1
         }
 
         # Check if file is empty
         if [ -z "$secretValue" ]; then
-          echo "Error: Secret file ${!varNameFile} is empty"
-          exit 1
+          echo "Error: Secret file ${!varNameFile} is empty" >&2
+          return 1
         fi
 
         # Return file content
@@ -102,8 +102,8 @@ function get_secret {
   fi
 
   # If no secret is found, return an error
-  echo "Error: Secret for $varName not found"
-  exit 1
+  echo "Error: Secret for $varName not found" >&2
+  return 1
 }
 
 # Need to convert prefixed variables to known values:
@@ -120,7 +120,10 @@ varName="$ENV_PREFIX"DATABASE_USERNAME
 database_username=$(echo ${!varName})
 
 varName="${ENV_PREFIX}DATABASE_PASSWORD"
-database_password=$(get_secret "$varName")
+if ! database_password=$(get_secret "$varName"); then
+  echo "Failed to get database password. Exiting." >&2
+  exit 1
+fi
 
 varName="$ENV_PREFIX"DATABASE_APPNAME
 database_appname=$(echo ${!varName})
