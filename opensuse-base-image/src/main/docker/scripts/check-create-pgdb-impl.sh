@@ -170,19 +170,21 @@ function create_pgpass_file {
   echo "INFO: Creating .pgpass file at $pgpassFile"
 
   if echo "$database_host:$database_port:$database_name:$database_username:$database_password" > "$pgpassFile"; then
-    echo "INFO: Successfully wrote to $pgpassFile file"
-    cat "$pgpassFile" # TODO remove after testing
+    echo "INFO: Successfully wrote to .pgpass file"
   else
-    echo "ERROR: Failed to write to $pgpassFile file"
+    echo "ERROR: Failed to write to .pgpass file"
     exit 1
   fi
 
   if chmod 0600 "$pgpassFile"; then
-    echo "INFO: Successfully set permissions on $pgpassFile file"
+    echo "INFO: Successfully set permissions on .pgpass file"
   else
-    echo "ERROR: Failed to set permissions on $pgpassFile file"
+    echo "ERROR: Failed to set permissions on .pgpass file"
     exit 1
   fi
+
+  export PGPASSFILE="$pgpassFile"
+  echo "INFO: PGPASSFILE environment variable set to $PGPASSFILE"
 }
 
 function check_db_exist {
@@ -194,7 +196,6 @@ function check_db_exist {
    --host="$database_host" \
    --port="$database_port" \
    --variable database_name="$database_name" \
-   --passfile="$pgpassFile" \
    --tuples-only \
    2>$tmpErr <<EOF | grep -q 1
 SELECT 1 FROM pg_database WHERE datname = :'database_name';
@@ -222,7 +223,6 @@ function create_db {
    --host="$database_host" \
    --port="$database_port" \
    --variable database_name="$database_name" \
-   --passfile="$pgpassFile" \
    >/dev/null 2>$tmpErr <<EOF
 CREATE DATABASE :"database_name";
 EOF
@@ -247,6 +247,9 @@ function remove_pgpass_file {
   else
     echo "INFO: No $pgpassFile file found to remove"
   fi
+
+  unset PGPASSFILE
+  echo "INFO: PGPASSFILE environment variable unset"
 }
 
 # -------Main Execution Section--------#
