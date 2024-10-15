@@ -45,7 +45,6 @@ fi
 
 ENV_PREFIX=$1
 
-# Function to get secret
 function get_secret {
   local varName="$1"
   local varNameFile="${varName}_FILE"
@@ -170,16 +169,16 @@ function create_pgpass_file {
   echo "INFO: Creating .pgpass file at $pgpassFile"
 
   if echo "$database_host:$database_port:$database_name:$database_username:$database_password" > "$pgpassFile"; then
-    echo "INFO: Successfully wrote to .pgpass file"
+    echo "INFO: Successfully wrote to $pgpassFile file"
   else
-    echo "ERROR: Failed to write to .pgpass file"
+    echo "ERROR: Failed to write to $pgpassFile file"
     exit 1
   fi
 
   if chmod 0600 "$pgpassFile"; then
-    echo "INFO: Successfully set permissions on .pgpass file"
+    echo "INFO: Successfully set permissions on $pgpassFile file"
   else
-    echo "ERROR: Failed to set permissions on .pgpass file"
+    echo "ERROR: Failed to set permissions on $pgpassFile file"
     exit 1
   fi
 
@@ -235,27 +234,9 @@ EOF
   fi
 }
 
-function remove_pgpass_file {
-  if [ -f "$pgpassFile" ]; then
-    echo "INFO: Removing $pgpassFile file"
-    if rm -f "$pgpassFile"; then
-      echo "INFO: $pgpassFile file removed successfully"
-    else
-      echo "ERROR: Failed to remove $pgpassFile file"
-      exit 1
-    fi
-  else
-    echo "INFO: No $pgpassFile file found to remove"
-  fi
-
-  unset PGPASSFILE
-  echo "INFO: PGPASSFILE environment variable unset"
-}
-
 # -------Main Execution Section--------#
 
 check_variables
 check_psql
 create_pgpass_file
 check_db_exist
-remove_pgpass_file
