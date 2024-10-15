@@ -34,6 +34,7 @@ tmpDir="/tmp"
 scriptName=$(basename "$0")
 baseName="${scriptName%.*}"
 tmpErr=$tmpDir/$baseName"-stderr"
+pgpassFile="$tmpDir/.pgpass"
 
 # Check that the environment variable prefix to use has been passed
 if [ $# -ne 1 ]; then
@@ -72,7 +73,7 @@ function get_secret {
       fi
 
       # Read file
-      if ! secretValue="$(cat "${!varNameFile}")"; then
+      if ! secretValue="$(< "${!varNameFile}")"; then
         echo "ERROR: Failed to read file ${!varNameFile}" >&2
         return 1
       fi
@@ -165,16 +166,35 @@ function check_variables {
   fi
 }
 
+function create_pgpass_file {
+  echo "INFO: Creating .pgpass file at $pgpassFile"
+
+  if echo "$database_host:$database_port:$database_name:$database_username:$database_password" > "$pgpassFile"; then
+    echo "INFO: Successfully wrote to $pgpassFile file"
+    cat "$pgpassFile" # TODO remove after testing
+  else
+    echo "ERROR: Failed to write to $pgpassFile file"
+    exit 1
+  fi
+
+  if chmod 0600 "$pgpassFile"; then
+    echo "INFO: Successfully set permissions on $pgpassFile file"
+  else
+    echo "ERROR: Failed to set permissions on $pgpassFile file"
+    exit 1
+  fi
+}
+
 function check_db_exist {
   echo "INFO: Checking database existence..."
 
 # Need to set password for run
 # Sending psql errors to file, using quiet grep to search for valid result
- if  PGPASSWORD="$database_password" \
-   PGAPPNAME="$database_appname" psql --username="$database_username" \
+ if PGAPPNAME="$database_appname" psql --username="$database_username" \
    --host="$database_host" \
    --port="$database_port" \
    --variable database_name="$database_name" \
+   --passfile="$pgpassFile" \
    --tuples-only \
    2>$tmpErr <<EOF | grep -q 1
 SELECT 1 FROM pg_database WHERE datname = :'database_name';
@@ -198,11 +218,11 @@ function create_db {
 # Need to set password for run
 # Sending psql errors to file, stderr to NULL
 # postgres will auto-lowercase database names unless they are quoted
-  if  PGPASSWORD="$database_password" \
-   PGAPPNAME="$database_appname" psql --username="$database_username" \
+  if PGAPPNAME="$database_appname" psql --username="$database_username" \
    --host="$database_host" \
    --port="$database_port" \
    --variable database_name="$database_name" \
+   --passfile="$pgpassFile" \
    >/dev/null 2>$tmpErr <<EOF
 CREATE DATABASE :"database_name";
 EOF
@@ -215,8 +235,24 @@ EOF
   fi
 }
 
+function remove_pgpass_file {
+  if [ -f "$pgpassFile" ]; then
+    echo "INFO: Removing $pgpassFile file"
+    if rm -f "$pgpassFile"; then
+      echo "INFO: $pgpassFile file removed successfully"
+    else
+      echo "ERROR: Failed to remove $pgpassFile file"
+      exit 1
+    fi
+  else
+    echo "INFO: No $pgpassFile file found to remove"
+  fi
+}
+
 # -------Main Execution Section--------#
 
 check_variables
 check_psql
+create_pgpass_file
 check_db_exist
+remove_pgpass_file
