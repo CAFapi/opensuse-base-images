@@ -195,7 +195,7 @@ function check_db_exist {
  if PGAPPNAME="$database_appname" psql --username="$database_username" \
    --host="$database_host" \
    --port="$database_port" \
-   --variable database_name="$database_name" \
+   "$database_name" \
    --tuples-only \
    2>$tmpErr <<EOF | grep -q 1
 SELECT 1 FROM pg_database WHERE datname = :'database_name';
@@ -222,7 +222,7 @@ function create_db {
   if PGAPPNAME="$database_appname" psql --username="$database_username" \
    --host="$database_host" \
    --port="$database_port" \
-   --variable database_name="$database_name" \
+   "$database_name" \
    >/dev/null 2>$tmpErr <<EOF
 CREATE DATABASE :"database_name";
 EOF
