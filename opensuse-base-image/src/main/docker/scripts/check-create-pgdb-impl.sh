@@ -198,7 +198,7 @@ function check_db_exist {
    "$database_name" \
    --tuples-only \
    2>$tmpErr <<EOF | grep -q 1
-SELECT 1 FROM pg_database WHERE datname = :'database_name';
+SELECT 1 FROM pg_database WHERE datname = '$database_name';
 EOF
  then
    echo "INFO: Database [$database_name] already exists."
@@ -224,7 +224,7 @@ function create_db {
    --port="$database_port" \
    "$database_name" \
    >/dev/null 2>$tmpErr <<EOF
-CREATE DATABASE :"database_name";
+CREATE DATABASE "$database_name";
 EOF
   then
     echo "INFO: Database [$database_name] created."
