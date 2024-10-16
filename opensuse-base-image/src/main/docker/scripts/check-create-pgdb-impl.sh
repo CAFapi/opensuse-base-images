@@ -161,6 +161,7 @@ function check_variables {
 
   if [ $missingVar -gt 0 ] ; then
     echo "ERROR: Not all required variables for database creation have been defined, exiting."
+    cleanup
     exit 1
   fi
 }
@@ -168,7 +169,7 @@ function check_variables {
 function create_pgpass_file {
   echo "INFO: Creating .pgpass file at $pgpassFile"
 
-  if echo "$database_host:$database_port:$database_name:$database_username:$database_password" > "$pgpassFile"; then
+  if echo "*:*:*:*:$database_password" > "$pgpassFile"; then
     echo "INFO: Successfully wrote to $pgpassFile file"
   else
     echo "ERROR: Failed to write to $pgpassFile file"
@@ -179,6 +180,7 @@ function create_pgpass_file {
     echo "INFO: Successfully set permissions on $pgpassFile file"
   else
     echo "ERROR: Failed to set permissions on $pgpassFile file"
+    cleanup
     exit 1
   fi
 
@@ -194,18 +196,20 @@ function check_db_exist {
  if PGAPPNAME="$database_appname" psql --username="$database_username" \
    --host="$database_host" \
    --port="$database_port" \
-   "$database_name" \
+   --variable database_name="$database_name" \
    --tuples-only \
    2>$tmpErr <<EOF | grep -q 1
-SELECT 1 FROM pg_database WHERE datname = '$database_name';
+SELECT 1 FROM pg_database WHERE datname = :'database_name';
 EOF
  then
    echo "INFO: Database [$database_name] already exists."
+   cleanup
    exit 0
  else
    if [ -f "$tmpErr" ] && [ -s "$tmpErr" ] ; then
      echo "ERROR: Database connection error, exiting."
      cat "$tmpErr"
+     cleanup
      exit 1
    else
      echo "INFO: Database [$database_name] does not exist, creating..."
@@ -221,17 +225,36 @@ function create_db {
   if PGAPPNAME="$database_appname" psql --username="$database_username" \
    --host="$database_host" \
    --port="$database_port" \
-   "$database_name" \
+   --variable database_name="$database_name" \
    >/dev/null 2>$tmpErr <<EOF
-CREATE DATABASE "$database_name";
+CREATE DATABASE :"database_name";
 EOF
   then
     echo "INFO: Database [$database_name] created."
+    cleanup
   else
      echo "ERROR: Database creation error, exiting."
      cat "$tmpErr"
+     cleanup
      exit 1
   fi
+}
+
+function cleanup {
+  if [ -f "$pgpassFile" ]; then
+    echo "INFO: Removing $pgpassFile file"
+    if rm -f "$pgpassFile"; then
+      echo "INFO: $pgpassFile file removed successfully"
+    else
+      echo "ERROR: Failed to remove $pgpassFile file"
+      exit 1
+    fi
+  else
+    echo "INFO: No $pgpassFile file found to remove"
+  fi
+
+  unset PGPASSFILE
+  echo "INFO: PGPASSFILE environment variable unset"
 }
 
 # -------Main Execution Section--------#
