@@ -34,6 +34,7 @@ tmpDir="/tmp"
 scriptName=$(basename "$0")
 baseName="${scriptName%.*}"
 tmpErr=$tmpDir/$baseName"-stderr"
+pgpassFile="$tmpDir/.pgpass"
 
 # Check that the environment variable prefix to use has been passed
 if [ $# -ne 1 ]; then
@@ -43,6 +44,54 @@ if [ $# -ne 1 ]; then
 fi
 
 ENV_PREFIX=$1
+
+function get_secret {
+  local varName="$1"
+  local varNameFile="${varName}_FILE"
+  local secretValue=""
+
+  # If CAF_GET_SECRETS_FROM_ENV=true (default: true), get secret from env var
+  if [ "${CAF_GET_SECRETS_FROM_ENV:-true}" = "true" ]; then
+    # Check if varName is set and not empty
+    if [ -n "${!varName}" ]; then
+      secretValue="${!varName}"
+      printf '%s' "$secretValue"
+      return 0
+    fi
+  fi
+
+  # If CAF_GET_SECRETS_FROM_FILE=true (default: false), get secret from file via env var
+  if [ "${CAF_GET_SECRETS_FROM_FILE:-false}" = "true" ]; then
+    # Check if varNameFile is set and not empty
+    if [ -n "${!varNameFile}" ]; then
+
+      # Check if file exists and is readable
+      if [ ! -r "${!varNameFile}" ]; then
+        echo "ERROR: File ${!varNameFile} does not exist or is not readable" >&2
+        return 1
+      fi
+
+      # Read file
+      if ! secretValue="$(< "${!varNameFile}")"; then
+        echo "ERROR: Failed to read file ${!varNameFile}" >&2
+        return 1
+      fi
+
+      # Check if file content is not empty
+      if [ -z "$secretValue" ]; then
+        echo "ERROR: Secret file ${!varNameFile} is empty" >&2
+        return 1
+      fi
+
+      printf '%s' "$secretValue"
+      return 0
+    fi
+  fi
+
+  # If no secret is found, return an error
+  echo "ERROR: Secret for $varName not found" >&2
+  return 1
+}
 
 # Need to convert prefixed variables to known values:
 varName="$ENV_PREFIX"DATABASE_NAME
@@ -57,8 +106,10 @@ database_port=$(echo ${!varName})
 varName="$ENV_PREFIX"DATABASE_USERNAME
 database_username=$(echo ${!varName})
 
-varName="$ENV_PREFIX"DATABASE_PASSWORD
-database_password=$(echo ${!varName})
+varName="${ENV_PREFIX}DATABASE_PASSWORD"
+if ! database_password="$(get_secret "$varName")"; then
+  exit 1
+fi
 
 varName="$ENV_PREFIX"DATABASE_APPNAME
 database_appname=$(echo ${!varName})
@@ -101,10 +152,7 @@ function check_variables {
     missingVar+=1
   fi
 
-  if [ -z "$database_password" ] ; then
-    echo "ERROR: Mandatory variable "$(echo $ENV_PREFIX"DATABASE_PASSWORD")" not defined"
-    missingVar+=1
-  fi
+  # database_password is checked in get_secret function
 
   if [ -z "$database_appname" ] ; then
     echo "ERROR: Mandatory variable "$(echo $ENV_PREFIX"DATABASE_APPNAME")" not defined"
@@ -113,8 +161,31 @@ function check_variables {
 
   if [ $missingVar -gt 0 ] ; then
     echo "ERROR: Not all required variables for database creation have been defined, exiting."
+    cleanup
     exit 1
   fi
+}
+
+function create_pgpass_file {
+  echo "INFO: Creating .pgpass file at $pgpassFile"
+
+  if echo "*:*:*:*:$database_password" > "$pgpassFile"; then
+    echo "INFO: Successfully wrote to $pgpassFile file"
+  else
+    echo "ERROR: Failed to write to $pgpassFile file"
+    exit 1
+  fi
+
+  if chmod 0600 "$pgpassFile"; then
+    echo "INFO: Successfully set permissions on $pgpassFile file"
+  else
+    echo "ERROR: Failed to set permissions on $pgpassFile file"
+    cleanup
+    exit 1
+  fi
+
+  export PGPASSFILE="$pgpassFile"
+  echo "INFO: PGPASSFILE environment variable set to $PGPASSFILE"
 }
 
 function check_db_exist {
@@ -122,8 +193,7 @@ function check_db_exist {
 
 # Need to set password for run
 # Sending psql errors to file, using quiet grep to search for valid result
- if  PGPASSWORD="$database_password" \
-   PGAPPNAME="$database_appname" psql --username="$database_username" \
+ if PGAPPNAME="$database_appname" psql --username="$database_username" \
    --host="$database_host" \
    --port="$database_port" \
    --variable database_name="$database_name" \
@@ -133,11 +203,13 @@ SELECT 1 FROM pg_database WHERE datname = :'database_name';
 EOF
  then
    echo "INFO: Database [$database_name] already exists."
+   cleanup
    exit 0
  else
    if [ -f "$tmpErr" ] && [ -s "$tmpErr" ] ; then
      echo "ERROR: Database connection error, exiting."
      cat "$tmpErr"
+     cleanup
      exit 1
    else
      echo "INFO: Database [$database_name] does not exist, creating..."
@@ -150,8 +222,7 @@ function create_db {
 # Need to set password for run
 # Sending psql errors to file, stderr to NULL
 # postgres will auto-lowercase database names unless they are quoted
-  if  PGPASSWORD="$database_password" \
-   PGAPPNAME="$database_appname" psql --username="$database_username" \
+  if PGAPPNAME="$database_appname" psql --username="$database_username" \
    --host="$database_host" \
    --port="$database_port" \
    --variable database_name="$database_name" \
@@ -160,15 +231,35 @@ CREATE DATABASE :"database_name";
 EOF
   then
     echo "INFO: Database [$database_name] created."
+    cleanup
   else
      echo "ERROR: Database creation error, exiting."
      cat "$tmpErr"
+     cleanup
      exit 1
   fi
+}
+
+function cleanup {
+  if [ -f "$pgpassFile" ]; then
+    echo "INFO: Removing $pgpassFile file"
+    if rm -f "$pgpassFile"; then
+      echo "INFO: $pgpassFile file removed successfully"
+    else
+      echo "ERROR: Failed to remove $pgpassFile file"
+      exit 1
+    fi
+  else
+    echo "INFO: No $pgpassFile file found to remove"
+  fi
+
+  unset PGPASSFILE
+  echo "INFO: PGPASSFILE environment variable unset"
 }
 
 # -------Main Execution Section--------#
 
 check_variables
 check_psql
+create_pgpass_file
 check_db_exist
