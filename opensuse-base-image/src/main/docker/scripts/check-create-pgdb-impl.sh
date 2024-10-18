@@ -50,8 +50,8 @@ function get_secret {
   local varNameFile="${varName}_FILE"
   local secretValue=""
 
-  # If CAF_GET_SECRETS_FROM_ENV=true (default: true), get secret from env var
-  if [ "${CAF_GET_SECRETS_FROM_ENV:-true}" = "true" ]; then
+  # If CAF_ENABLE_ENV_SECRETS=true (default: true), get secret from env var
+  if [ "${CAF_ENABLE_ENV_SECRETS:-true}" = "true" ]; then
     # Check if varName is set and not empty
     if [ -n "${!varName}" ]; then
       secretValue="${!varName}"
@@ -60,8 +60,8 @@ function get_secret {
     fi
   fi
 
-  # If CAF_GET_SECRETS_FROM_FILE=true (default: false), get secret from file via env var
-  if [ "${CAF_GET_SECRETS_FROM_FILE:-false}" = "true" ]; then
+  # If CAF_ENABLE_FILE_SECRETS=true (default: false), get secret from file via env var
+  if [ "${CAF_ENABLE_FILE_SECRETS:-false}" = "true" ]; then
     # Check if varNameFile is set and not empty
     if [ -n "${!varNameFile}" ]; then
 
