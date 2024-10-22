@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.github.cafapi</groupId>
         <artifactId>opensuse-base-images-aggregator</artifactId>
-        <version>4.2.0-SNAPSHOT</version>
+        <version>4.3.0-SNAPSHOT</version>
     </parent>
     
     <artifactId>opensuse-base-image</artifactId>
