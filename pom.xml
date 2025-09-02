@@ -23,7 +23,7 @@
 
     <groupId>com.github.cafapi</groupId>
     <artifactId>opensuse-base-images-aggregator</artifactId>
-    <version>4.2.11-SNAPSHOT</version>
+    <version>4.2.11-198</version>
     <packaging>pom</packaging>
 
     <name>openSUSE Base Images Aggregator</name>
