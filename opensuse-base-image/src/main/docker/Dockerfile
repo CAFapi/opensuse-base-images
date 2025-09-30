@@ -64,7 +64,7 @@ COPY --from=stage2 /usr/local/bin/su-exec /usr/local/bin/su-exec
 COPY startup /startup
 ADD https://raw.githubusercontent.com/CAFapi/caf-common/v1.19.0/container-cert-script/install-ca-cert.sh \
     /startup/startup.d/install-ca-cert-base.sh
-RUN chmod +x /startup/* /startup/startup.d/*
+RUN chmod a+rwx /startup/* /startup/startup.d/*
 
 # Create symlink to support the use of 'gosu' command
 RUN ln -s /usr/local/bin/su-exec /usr/local/bin/gosu
