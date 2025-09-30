@@ -2,10 +2,7 @@
 ${version-number}
 
 #### New Features
-- None
-
-#### Patch Fixes Included
-- This release includes OS package updates only.
+- US1048180: Give read and execute permissions to all users on startup scripts.
 
 #### Known Issues
 - None
