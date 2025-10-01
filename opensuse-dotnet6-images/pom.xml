@@ -23,7 +23,7 @@
     <parent>
         <groupId>com.github.cafapi</groupId>
         <artifactId>opensuse-base-images-aggregator</artifactId>
-        <version>4.3.0-SNAPSHOT</version>
+        <version>4.3.0-211</version>
     </parent>
 
     <artifactId>opensuse-dotnet6-images</artifactId>
