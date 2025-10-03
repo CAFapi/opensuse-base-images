@@ -12,7 +12,7 @@ The images which are built in this project are:
   - opensuse-jdk17
   - opensuse-jre21
   - opensuse-jdk21
-  - opensuse-nodejs20
+  - opensuse-nodejs22
   - opensuse-python3
   - opensuse-dotnet6-aspnet
   - opensuse-dotnet6-runtime
