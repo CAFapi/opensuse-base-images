@@ -60,12 +60,12 @@
 
     <modules>
         <module>opensuse-base-image</module>
-        <module>opensuse-java8-images</module>
-        <module>opensuse-java11-images</module>
+        <!--<module>opensuse-java8-images</module>-->
+        <!--<module>opensuse-java11-images</module>-->
         <module>opensuse-java17-images</module>
         <module>opensuse-java21-images</module>
-        <module>opensuse-nodejs20-image</module>
-        <module>opensuse-dotnet6-images</module>
+        <module>opensuse-nodejs22-image</module>
+        <!--<module>opensuse-dotnet6-images</module>-->
         <module>opensuse-python3-image</module>
     </modules>
 
@@ -103,7 +103,7 @@
                     <imageManagement>
                         <image>
                             <repository>${dockerHubPublic}/opensuse/leap</repository>
-                            <tag>latest</tag>
+                            <tag>16.0</tag>
                         </image>
                     </imageManagement>
                 </configuration>

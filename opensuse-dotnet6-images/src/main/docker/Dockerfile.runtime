@@ -18,7 +18,7 @@ ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
 RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc && \
-    curl -Lfo /etc/zypp/repos.d/microsoft-prod.repo https://packages.microsoft.com/config/opensuse/15/prod.repo && \
+    curl -Lfo /etc/zypp/repos.d/microsoft-prod.repo https://packages.microsoft.com/config/opensuse/16/prod.repo && \
     chown root:root /etc/zypp/repos.d/microsoft-prod.repo && \
     zypper -n install dotnet-runtime-6.0 && \
     zypper -n clean --all

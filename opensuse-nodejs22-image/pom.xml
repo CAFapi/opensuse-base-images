@@ -27,10 +27,10 @@
         <version>4.3.1-SNAPSHOT</version>
     </parent>
     
-    <artifactId>opensuse-nodejs20-image</artifactId>
+    <artifactId>opensuse-nodejs22-image</artifactId>
     <packaging>pom</packaging>
 
-    <name>openSUSE NodeJS20 image</name>
+    <name>openSUSE NodeJS22 image</name>
 
     <build>
         <plugins>
@@ -56,7 +56,7 @@
                 <configuration>
                     <images>
                         <image>
-                            <name>${dockerCafImagePrefix}opensuse-nodejs20${dockerProjectVersion}</name>
+                            <name>${dockerCafImagePrefix}opensuse-nodejs22${dockerProjectVersion}</name>
                             <build>
                                 <contextDir>.</contextDir>
                                 <args>
