@@ -84,21 +84,21 @@
                                 </args>
                             </build>
                         </image>
-                        <image>
+<!--                        <image>
                             <name>${dockerCafImagePrefix}opensuse-dotnet6-sdk${dockerProjectVersion}</name>
                             <build>
                                 <contextDir>.</contextDir>
                                 <dockerFile>Dockerfile.sdk</dockerFile>
                                 <args>
-                                    <!-- Enable internet access -->
+                                     Enable internet access 
                                     <http_proxy>${env.HTTP_PROXY}</http_proxy>
                                     <https_proxy>${env.HTTPS_PROXY}</https_proxy>
                                     <no_proxy>${env.NO_PROXY}</no_proxy>
-                                    <!-- Pass in opensuse-base image as param -->
+                                     Pass in opensuse-base image as param 
                                     <BASE_IMAGE>${dockerCafImagePrefix}opensuse-base${dockerProjectVersion}</BASE_IMAGE>
                                 </args>
                             </build>
-                        </image>
+                        </image>-->
                     </images>
                     <verbose>api,build</verbose>
                 </configuration>
