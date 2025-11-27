@@ -114,6 +114,14 @@ fi
 varName="$ENV_PREFIX"DATABASE_APPNAME
 database_appname=$(echo ${!varName})
 
+# Optional admin DB name (defaults to postgres)
+varName="$ENV_PREFIX"ADMIN_DB_NAME
+admin_dbname=$(echo ${!varName})
+if [ -z "$admin_dbname" ]; then
+  admin_dbname="postgres"
+fi
+echo "INFO: Using admin database [$admin_dbname] for initial connection"
+
 # ----------Function Section-----------#
 function check_psql {
   if [ $(type -p psql) ]; then
