@@ -83,3 +83,4 @@ The script then reads the database details from a set of environment variables w
 | `SERVICE_`DATABASE_PASSWORD | The password to use when establishing the connection to the PostgreSQL server.                         |
 | `SERVICE_`DATABASE_APPNAME  | The application name that PostgreSQL should associate with the connection for logging and monitoring.  |
 | `SERVICE_`DATABASE_NAME     | The name of the PostgreSQL database to be created.                                                     |
+| `SERVICE_`ADMIN_DB_NAME     | **Optional:** The name of the admin database to use for initial connection. Default = postgres         |

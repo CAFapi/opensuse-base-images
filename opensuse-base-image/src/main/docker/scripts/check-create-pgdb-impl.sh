@@ -114,6 +114,14 @@ fi
 varName="$ENV_PREFIX"DATABASE_APPNAME
 database_appname=$(echo ${!varName})
 
+# Optional admin DB name (defaults to postgres)
+varName="$ENV_PREFIX"ADMIN_DB_NAME
+admin_dbname=$(echo ${!varName})
+if [ -z "$admin_dbname" ]; then
+  admin_dbname="postgres"
+fi
+echo "INFO: Using admin database [$admin_dbname] for initial connection"
+
 # ----------Function Section-----------#
 function check_psql {
   if [ $(type -p psql) ]; then
@@ -193,40 +201,44 @@ function check_db_exist {
 
 # Need to set password for run
 # Sending psql errors to file, using quiet grep to search for valid result
- if PGAPPNAME="$database_appname" psql --username="$database_username" \
-   --host="$database_host" \
-   --port="$database_port" \
-   --variable database_name="$database_name" \
-   --tuples-only \
-   2>$tmpErr <<EOF | grep -q 1
+  if PGAPPNAME="$database_appname" psql \
+      --username="$database_username" \
+      --host="$database_host" \
+      --port="$database_port" \
+      --dbname="$admin_dbname" \
+      --variable database_name="$database_name" \
+      --tuples-only \
+      2>"$tmpErr" <<EOF | grep -q 1
 SELECT 1 FROM pg_database WHERE datname = :'database_name';
 EOF
- then
-   echo "INFO: Database [$database_name] already exists."
-   cleanup
-   exit 0
- else
-   if [ -f "$tmpErr" ] && [ -s "$tmpErr" ] ; then
-     echo "ERROR: Database connection error, exiting."
-     cat "$tmpErr"
-     cleanup
-     exit 1
-   else
-     echo "INFO: Database [$database_name] does not exist, creating..."
-     create_db
-   fi
- fi
+  then
+    echo "INFO: Database [$database_name] already exists."
+    cleanup
+    exit 0
+  else
+    if [ -f "$tmpErr" ] && [ -s "$tmpErr" ]; then
+      echo "ERROR: Database connection error, exiting."
+      cat "$tmpErr"
+      cleanup
+      exit 1
+    else
+      echo "INFO: Database [$database_name] does not exist, creating..."
+      create_db
+    fi
+  fi
 }
 
 function create_db {
 # Need to set password for run
 # Sending psql errors to file, stderr to NULL
 # postgres will auto-lowercase database names unless they are quoted
-  if PGAPPNAME="$database_appname" psql --username="$database_username" \
-   --host="$database_host" \
-   --port="$database_port" \
-   --variable database_name="$database_name" \
-   >/dev/null 2>$tmpErr <<EOF
+  if PGAPPNAME="$database_appname" psql \
+      --username="$database_username" \
+      --host="$database_host" \
+      --port="$database_port" \
+      --dbname="$admin_dbname" \
+      --variable database_name="$database_name" \
+      >/dev/null 2>"$tmpErr" <<EOF
 CREATE DATABASE :"database_name";
 EOF
   then
