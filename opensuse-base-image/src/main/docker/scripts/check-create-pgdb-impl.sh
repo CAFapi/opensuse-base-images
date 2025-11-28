@@ -122,6 +122,9 @@ if [ -z "$admin_dbname" ]; then
 fi
 echo "INFO: Using admin database [$admin_dbname] for initial connection"
 
+varName="$ENV_PREFIX"DATABASE_TABLESPACE
+database_tablespace=$(echo ${!varName})
+
 # ----------Function Section-----------#
 function check_psql {
   if [ $(type -p psql) ]; then
@@ -232,6 +235,12 @@ function create_db {
 # Need to set password for run
 # Sending psql errors to file, stderr to NULL
 # postgres will auto-lowercase database names unless they are quoted
+
+  local tablespace_sql=""
+  if [[ -n "$database_tablespace" ]]; then
+    tablespace_sql="TABLESPACE \"$database_tablespace\""
+  fi
+
   if PGAPPNAME="$database_appname" psql \
       --username="$database_username" \
       --host="$database_host" \
@@ -239,7 +248,7 @@ function create_db {
       --dbname="$admin_dbname" \
       --variable database_name="$database_name" \
       >/dev/null 2>"$tmpErr" <<EOF
-CREATE DATABASE :"database_name";
+CREATE DATABASE :"database_name" $tablespace_sql;
 EOF
   then
     echo "INFO: Database [$database_name] created."
