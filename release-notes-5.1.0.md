@@ -1,5 +1,3 @@
-!not-ready-for-release!
-
 #### Version Number
 ${version-number}
 
@@ -9,3 +7,4 @@ The value of this is the tablespace to use when creating the database in the dat
 If not provided, the default tablespace is used.
 
 #### Known Issues
+- None
