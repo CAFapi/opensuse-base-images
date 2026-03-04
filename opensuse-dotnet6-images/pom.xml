@@ -26,10 +26,10 @@
         <version>5.1.2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>opensuse-dotnet6-images</artifactId>
+    <artifactId>opensuse-dotnet10-images</artifactId>
     <packaging>pom</packaging>
 
-    <name>openSUSE .NET 6 images</name>
+    <name>openSUSE .NET 10 images</name>
 
     <build>
         <plugins>
@@ -55,7 +55,7 @@
                 <configuration>
                     <images>
                         <image>
-                            <name>${dockerCafImagePrefix}opensuse-dotnet6-aspnet${dockerProjectVersion}</name>
+                            <name>${dockerCafImagePrefix}opensuse-dotnet10-aspnet${dockerProjectVersion}</name>
                             <build>
                                 <contextDir>.</contextDir>
                                 <dockerFile>Dockerfile.aspnet</dockerFile>
@@ -70,7 +70,7 @@
                             </build>
                         </image>
                         <image>
-                            <name>${dockerCafImagePrefix}opensuse-dotnet6-runtime${dockerProjectVersion}</name>
+                            <name>${dockerCafImagePrefix}opensuse-dotnet10-runtime${dockerProjectVersion}</name>
                             <build>
                                 <contextDir>.</contextDir>
                                 <dockerFile>Dockerfile.runtime</dockerFile>
@@ -85,7 +85,7 @@
                             </build>
                         </image>
                         <image>
-                            <name>${dockerCafImagePrefix}opensuse-dotnet6-sdk${dockerProjectVersion}</name>
+                            <name>${dockerCafImagePrefix}opensuse-dotnet10-sdk${dockerProjectVersion}</name>
                             <build>
                                 <contextDir>.</contextDir>
                                 <dockerFile>Dockerfile.sdk</dockerFile>
