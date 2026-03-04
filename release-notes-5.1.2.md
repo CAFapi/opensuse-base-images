@@ -1,12 +1,11 @@
 #### Version Number
 ${version-number}
 
-#### New Features
-- None
+#### Breaking Changes
+- US1084006: Deprecated the DotNET v6 images as DotNET 6 is no longer supported.
 
-#### Patch Fixes Included
-- This release includes OS package updates only.
+#### New Features
+- US1084006: Created new DotNET v10 images.
 
 #### Known Issues
 - None
-
