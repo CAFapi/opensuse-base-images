@@ -23,7 +23,7 @@
 
     <groupId>com.github.cafapi</groupId>
     <artifactId>opensuse-base-images-aggregator</artifactId>
-    <version>5.1.3-SNAPSHOT</version>
+    <version>6.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>openSUSE Base Images Aggregator</name>
@@ -65,7 +65,7 @@
         <module>opensuse-java17-images</module>
         <module>opensuse-java21-images</module>
         <module>opensuse-nodejs20-image</module>
-        <module>opensuse-dotnet6-images</module>
+        <module>opensuse-dotnet10-images</module>
         <module>opensuse-python3-image</module>
     </modules>
 

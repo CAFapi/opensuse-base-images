@@ -14,9 +14,9 @@ The images which are built in this project are:
   - opensuse-jdk21
   - opensuse-nodejs20
   - opensuse-python3
-  - opensuse-dotnet6-aspnet
-  - opensuse-dotnet6-runtime
-  - opensuse-dotnet6-sdk
+  - opensuse-dotnet10-aspnet
+  - opensuse-dotnet10-runtime
+  - opensuse-dotnet10-sdk
 
 ### Tini
 [Tini](https://github.com/krallin/tini) is pre-installed in the containers.  If the image entrypoint is not overwritten then it will be automatically used.
