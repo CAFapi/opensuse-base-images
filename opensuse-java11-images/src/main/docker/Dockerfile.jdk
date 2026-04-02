@@ -18,7 +18,7 @@ ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
 # Refresh the OS repositories and install OpenJDK 11 Development Kit
-RUN zypper -n install java-11-openjdk-devel && \
+RUN zypper -n install --no-refresh java-11-openjdk-devel && \
     zypper -n clean --all
 
 # Install Java certificate installation script

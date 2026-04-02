@@ -31,7 +31,7 @@ COPY DISABLE-CBC.pmod /etc/crypto-policies/policies/modules
 # Install crypto-policies-scripts and disable weaker security algorithms
 RUN zypper -n refresh && \
     zypper -n update && \
-    zypper -n install postgresql dejavu-fonts crypto-policies-scripts && \
+    zypper -n install --no-refresh postgresql dejavu-fonts crypto-policies-scripts && \
     update-crypto-policies --set DEFAULT:DISABLE-CBC && \
     sed -rie '/^jdk.tls.disabledAlgorithms=/s/$/, TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256/' \
         /etc/crypto-policies/back-ends/java.config && \
@@ -44,7 +44,7 @@ RUN zypper -n refresh && \
 FROM stage1 AS stage2
 
 # Download and compile su-exec
-RUN zypper -n install gcc && \
+RUN zypper -n install --no-refresh gcc && \
     curl -o /usr/local/bin/su-exec.c -SL "https://raw.githubusercontent.com/ncopa/su-exec/v0.3/su-exec.c" && \
     echo 7d0d0be183d4dddc223f73c8f81c564b2325f0eae1c1636e580b014e2847485b264b22021d9d403a70bf23080fd3920dcdc52101e62dd4ce7184a0079b4d78bc \
         /usr/local/bin/su-exec.c | sha512sum -c - && \

@@ -18,5 +18,5 @@ ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
 # Update the OS packages and install Python
-RUN zypper -n install python3 && \
+RUN zypper -n install --no-refresh python3 && \
     zypper -n clean --all
