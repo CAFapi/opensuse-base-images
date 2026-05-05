@@ -4,15 +4,10 @@ This project builds a number of base images which are based on the latest versio
 
 The images which are built in this project are:
 - opensuse-base
-  - opensuse-jre8
-  - opensuse-jdk8
-  - opensuse-jre11
-  - opensuse-jdk11
   - opensuse-jre17
   - opensuse-jdk17
   - opensuse-jre21
   - opensuse-jdk21
-  - opensuse-nodejs20
   - opensuse-python3
   - opensuse-dotnet10-aspnet
   - opensuse-dotnet10-runtime
