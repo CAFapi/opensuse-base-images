@@ -62,6 +62,8 @@
         <module>opensuse-base-image</module>
         <module>opensuse-java17-images</module>
         <module>opensuse-java21-images</module>
+        <module>opensuse-java25-images</module>
+        <module>opensuse-nodejs24-image</module>
         <module>opensuse-dotnet10-images</module>
         <module>opensuse-python3-image</module>
     </modules>
